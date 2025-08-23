@@ -1,9 +1,8 @@
-// entry point; loads app/index.js and calls app.listen().
-
-
-require("dotenv").config();
 const app = require("./app");
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server listening on ${PORT}`));
+const config = require("./config");
 
+const PORT = config.PORT || 3000;
 
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});

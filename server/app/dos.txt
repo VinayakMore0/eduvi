@@ -1,0 +1,9 @@
+models/ — Mongoose schemas (User, Course, Lesson, Enrollment, Order)
+
+routes/ — Express routers (auth.js, users.js, courses.js, etc.)
+
+controllers/ — business logic handlers
+
+middleware/ — e.g. passport.js (LocalStrategy), authJwt.js, role checks
+
+services/ — optional layer for database operations
