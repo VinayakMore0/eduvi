@@ -9,7 +9,7 @@ const {
   purchaseModel,
 } = require("../models");
 const jwt = require("jsonwebtoken");
-const { JWT_ADMIN_PASSWORD } = require("../../config");
+const { JWT_CREATOR_PASSWORD } = require("../../config");
 const { creatorMiddleware } = require("../middleware/creator");
 
 const creatorRouter = Router();
@@ -102,7 +102,7 @@ creatorRouter.post("/signin", async function (req, res) {
         {
           id: creator._id.toString(),
         },
-        JWT_ADMIN_PASSWORD
+        JWT_CREATOR_PASSWORD
       );
 
       res.json({

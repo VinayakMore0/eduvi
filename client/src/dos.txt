@@ -1,5 +1,0 @@
-store.js: configure slices (authSlice, coursesSlice, etc.) and export the store.
-
-In index.jsx wrap <App /> with <Provider store={store}> and <BrowserRouter>.
-
-Create <PrivateRoute> and <RoleRoute> components to guard pages by auth/role.

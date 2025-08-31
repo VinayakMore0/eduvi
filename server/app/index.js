@@ -3,8 +3,10 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const passport = require("passport");
-require("./middleware/passport")(passport);
+const morgan = require("morgan");
+const cookieParser = require("cookie-parser");
+// const passport = require("passport");
+// require("./middleware/passport")(passport);
 const path = require("path");
 
 const { userRouter } = require("./routes/user");
@@ -22,8 +24,11 @@ app.use(
     credentials: true,
   })
 ); // Enable CORS with credentials
+app.use(morgan('dev')); // Request logging
 app.use(express.json()); // parse JSON bodies
-app.use(passport.initialize());
+app.use(express.urlencoded({ extended: true })); // For parsing form data
+app.use(cookieParser(process.env.COOKIE_SECRET)); // Parse cookies
+// app.use(passport.initialize());
 
 // Apply rate limiting to all API routes
 app.use("/api/", apiLimiter);
