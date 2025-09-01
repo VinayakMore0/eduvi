@@ -1,7 +1,11 @@
-import { ArrowRight, BookOpen, Play, Star, Users } from "lucide-react";
 import React from "react";
+import { useRecoilState } from "recoil";
+import { Play, BookOpen, Users, Star, ArrowRight } from "lucide-react";
+import { routerState } from "../../state/atoms";
 
 const HeroSection = () => {
+  const [currentPage, setCurrentPage] = useRecoilState(routerState);
+
   return (
     <section className="pt-20 bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -14,17 +18,23 @@ const HeroSection = () => {
                 Eduvi
               </h1>
               <p className="text-xl text-gray-600 leading-relaxed">
-                Eduvi is a Global training provider based across the India that
+                Eduvi is a Global training provider based across the UK that
                 specialises in accredited and bespoke training courses. We crush
                 the barriers to getting a degree.
               </p>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <button className="bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
+              <button
+                onClick={() => setCurrentPage("courses")}
+                className="bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+              >
                 Get Started <ArrowRight size={20} />
               </button>
-              <button className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-50 transition-colors">
+              <button
+                onClick={() => setCurrentPage("about")}
+                className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-50 transition-colors"
+              >
                 Learn More
               </button>
             </div>
@@ -67,7 +77,7 @@ const HeroSection = () => {
                       4.9 (2.3k reviews)
                     </span>
                   </div>
-                  <span className="text-2xl font-bold text-blue-600">₹1299</span>
+                  <span className="text-2xl font-bold text-blue-600">$99</span>
                 </div>
               </div>
             </div>

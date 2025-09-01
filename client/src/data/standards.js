@@ -2,49 +2,10 @@ export const standardsData = [
   {
     id: 1,
     title: "Standard One",
-    description:
-      "Standard 1 is a foundation Standard that reflects 7 important concepts...",
+    description: "...",
+    price: 99,
+    rating: 4.8,
+    students: 1200,
   },
-  {
-    id: 2,
-    title: "Standard Two",
-    description:
-      "Standard 2 is a foundation Standard that reflects 7 important concepts...",
-  },
-  {
-    id: 3,
-    title: "Standard Three",
-    description:
-      "Standard 3 is a foundation Standard that reflects 7 important concepts...",
-  },
-  {
-    id: 4,
-    title: "Standard Four",
-    description:
-      "Standard 4 is a foundation Standard that reflects 7 important concepts...",
-  },
-  {
-    id: 5,
-    title: "Standard Five",
-    description:
-      "Standard 5 is a foundation Standard that reflects 7 important concepts...",
-  },
-  {
-    id: 6,
-    title: "Standard Six",
-    description:
-      "Standard 6 is a foundation Standard that reflects 7 important concepts...",
-  },
-  {
-    id: 7,
-    title: "Standard Seven",
-    description:
-      "Standard 7 is a foundation Standard that reflects 7 important concepts...",
-  },
-  {
-    id: 8,
-    title: "Standard Eight",
-    description:
-      "Standard 8 is a foundation Standard that reflects 7 important concepts...",
-  },
+  // ... rest of standards
 ];

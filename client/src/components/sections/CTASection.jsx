@@ -1,6 +1,10 @@
 import React from "react";
+import { useRecoilState } from "recoil";
+import { routerState } from "../../state/atoms";
 
 const CTASection = () => {
+  const [currentPage, setCurrentPage] = useRecoilState(routerState);
+
   return (
     <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600">
       <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
@@ -15,10 +19,16 @@ const CTASection = () => {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <button className="bg-white text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors">
+          <button
+            onClick={() => setCurrentPage("courses")}
+            className="bg-white text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors"
+          >
             Browse Courses
           </button>
-          <button className="border-2 border-white text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors">
+          <button
+            onClick={() => setCurrentPage("about")}
+            className="border-2 border-white text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors"
+          >
             Learn More
           </button>
         </div>

@@ -1,8 +1,8 @@
 import React from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { selectedStandardState, standardsDataState } from "../state/atoms";
-import { selectedStandardSelector } from "../state/selectors";
 import { BookOpen, Star } from "lucide-react";
+import { selectedStandardState, standardsDataState } from "../../state/atoms";
+import { selectedStandardSelector } from "../../state/selectors";
 
 const StandardsSection = () => {
   const [selectedStandard, setSelectedStandard] = useRecoilState(
@@ -28,7 +28,7 @@ const StandardsSection = () => {
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Standards List */}
           <div className="space-y-4">
-            {standards.map((standard) => (
+            {standards.slice(0, 8).map((standard) => (
               <div
                 key={standard.id}
                 onClick={() => setSelectedStandard(standard.id)}
@@ -79,7 +79,9 @@ const StandardsSection = () => {
                         className="text-yellow-400 fill-current"
                         size={16}
                       />
-                      <span className="text-sm text-gray-600">4.8</span>
+                      <span className="text-sm text-gray-600">
+                        {currentStandard.rating}
+                      </span>
                     </div>
                     <div className="text-sm text-gray-600">24 lessons</div>
                     <div className="text-sm text-gray-600">3.5 hours</div>

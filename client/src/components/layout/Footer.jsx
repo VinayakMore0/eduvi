@@ -1,4 +1,6 @@
 import React from "react";
+import { useRecoilState } from "recoil";
+import { routerState } from "../../state/atoms";
 
 const Footer = () => {
   return (
