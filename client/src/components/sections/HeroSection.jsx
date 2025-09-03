@@ -2,15 +2,21 @@ import React from "react";
 import { useRecoilState } from "recoil";
 import { Play, BookOpen, Users, Star, ArrowRight } from "lucide-react";
 import { routerState } from "../../state/atoms";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const HeroSection = () => {
-  const [currentPage, setCurrentPage] = useRecoilState(routerState);
+  const navigate = useNavigate();
 
   return (
     <section className="pt-20 bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-8">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="space-y-8"
+          >
             <div className="space-y-4">
               <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 leading-tight">
                 Grow up your skills by
@@ -26,13 +32,13 @@ const HeroSection = () => {
 
             <div className="flex flex-col sm:flex-row gap-4">
               <button
-                onClick={() => setCurrentPage("courses")}
+                onClick={() => navigate("/courses")}
                 className="bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
               >
                 Get Started <ArrowRight size={20} />
               </button>
               <button
-                onClick={() => setCurrentPage("about")}
+                onClick={() => navigate("/about")}
                 className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-50 transition-colors"
               >
                 Learn More
@@ -41,7 +47,7 @@ const HeroSection = () => {
 
             <div className="flex items-center gap-8 pt-4">
               <div className="text-center">
-                <div className="text-3xl font-bold text-gray-900">250+</div>
+                <div className="text-3xl font-bold text-gray-900">1,000+</div>
                 <div className="text-gray-600">Courses</div>
               </div>
               <div className="text-center">
@@ -53,9 +59,13 @@ const HeroSection = () => {
                 <div className="text-gray-600">Years</div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="relative">
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="relative"
+          >
             <div className="bg-white rounded-2xl shadow-2xl p-8 relative z-10">
               <div className="aspect-video bg-gradient-to-br from-blue-100 to-purple-100 rounded-xl flex items-center justify-center mb-6">
                 <div className="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center">
@@ -77,7 +87,9 @@ const HeroSection = () => {
                       4.9 (2.3k reviews)
                     </span>
                   </div>
-                  <span className="text-2xl font-bold text-blue-600">$99</span>
+                  <span className="text-2xl font-bold text-blue-600">
+                    $89.99
+                  </span>
                 </div>
               </div>
             </div>
@@ -89,7 +101,7 @@ const HeroSection = () => {
             <div className="absolute -bottom-4 -right-4 w-16 h-16 bg-green-400 rounded-full flex items-center justify-center shadow-lg">
               <Users className="text-white" size={24} />
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

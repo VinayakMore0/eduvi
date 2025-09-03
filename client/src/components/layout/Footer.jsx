@@ -1,6 +1,8 @@
 import React from "react";
 import { useRecoilState } from "recoil";
 import { routerState } from "../../state/atoms";
+import { Github, Linkedin, Twitter } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -13,55 +15,75 @@ const Footer = () => {
               Empowering learners worldwide with high-quality online education
               and professional development courses.
             </p>
+            <div className="flex space-x-4 mt-4">
+              <a
+                href="#"
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <Twitter size={20} />
+              </a>
+              <a
+                href="#"
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <Linkedin size={20} />
+              </a>
+              <a
+                href="#"
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <Github size={20} />
+              </a>
+            </div>
           </div>
 
           <div>
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/about"
                   className="text-gray-300 hover:text-white transition-colors"
                 >
                   About Us
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/courses"
                   className="text-gray-300 hover:text-white transition-colors"
                 >
                   Courses
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/instructors"
                   className="text-gray-300 hover:text-white transition-colors"
                 >
                   Instructors
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/contact"
                   className="text-gray-300 hover:text-white transition-colors"
                 >
                   Contact
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold mb-4">Support</h3>
+            <h3 className="text-lg font-semibold mb-4">Categories</h3>
             <ul className="space-y-2">
               <li>
                 <a
                   href="#"
                   className="text-gray-300 hover:text-white transition-colors"
                 >
-                  Help Center
+                  Web Development
                 </a>
               </li>
               <li>
@@ -69,7 +91,7 @@ const Footer = () => {
                   href="#"
                   className="text-gray-300 hover:text-white transition-colors"
                 >
-                  Terms of Service
+                  Data Science
                 </a>
               </li>
               <li>
@@ -77,7 +99,7 @@ const Footer = () => {
                   href="#"
                   className="text-gray-300 hover:text-white transition-colors"
                 >
-                  Privacy Policy
+                  Design
                 </a>
               </li>
               <li>
@@ -85,7 +107,7 @@ const Footer = () => {
                   href="#"
                   className="text-gray-300 hover:text-white transition-colors"
                 >
-                  FAQ
+                  Marketing
                 </a>
               </li>
             </ul>

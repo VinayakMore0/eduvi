@@ -170,3 +170,84 @@ export const creatorsDataState = atom({
     },
   ],
 });
+
+export const userState = atom({
+  key: "userState",
+  default: {
+    isAuthenticated: false,
+    user: null,
+    token: null,
+    loading: false,
+  },
+});
+
+export const coursesState = atom({
+  key: "coursesState",
+  default: {
+    courses: [],
+    loading: false,
+    error: null,
+    pagination: {
+      page: 1,
+      limit: 9,
+      total: 0,
+      hasMore: true,
+    },
+  },
+});
+
+export const cartState = atom({
+  key: "cartState",
+  default: {
+    items: [],
+    total: 0,
+    discount: 0,
+    isOpen: false,
+  },
+});
+
+export const selectedCourseState = atom({
+  key: "selectedCourseState",
+  default: null,
+});
+
+export const uiState = atom({
+  key: "uiState",
+  default: {
+    theme: "light",
+    sidebarOpen: false,
+    loading: false,
+    notifications: [],
+  },
+});
+
+export const filtersState = atom({
+  key: "filtersState",
+  default: {
+    category: "all",
+    level: "all",
+    price: "all",
+    rating: "all",
+    search: "",
+    sortBy: "popular",
+    instructor: "all",
+  },
+});
+
+export const wishlistState = atom({
+  key: "wishlistState",
+  default: [],
+});
+
+export const reviewsState = atom({
+  key: "reviewsState",
+  default: {
+    reviews: [],
+    loading: false,
+    stats: {
+      totalReviews: 0,
+      averageRating: 0,
+      ratingDistribution: [0, 0, 0, 0, 0],
+    },
+  },
+});
