@@ -18,13 +18,13 @@ const FeaturedCoursesSection = () => {
 
   const loadFeaturedCourses = async () => {
     try {
-      const response = await ApiService.get("/courses");
+      const response = await ApiService.getAllCourses();
       setCourses((prev) => ({
         ...prev,
-        courses: response.data,
+        courses: response.courses,
       }));
     } catch (error) {
-      console.error("Failed to load featured courses");
+      console.error("Failed to load featured courses", error);
     }
   };
 
@@ -52,7 +52,7 @@ const FeaturedCoursesSection = () => {
         <div className="grid md:grid-cols-3 gap-8 mb-12">
           {featuredCourses.map((course, index) => (
             <motion.div
-              key={course.id}
+              key={course._id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}

@@ -15,6 +15,8 @@ const { creatorRouter } = require("./routes/creator");
 const webRouter = require("./routes/web");
 const creatorWebRouter = require("./routes/creator-web");
 const { apiLimiter, authLimiter } = require("./middleware/rateLimiter");
+const contactRouter = require("./routes/contact");
+const instructorsRoute = require("./routes/instructors");
 
 const app = express();
 // app.use(cors({ origin: "http://localhost:3000", credentials: true }));
@@ -43,6 +45,8 @@ app.use("/api/v1/creator/signup", authLimiter);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/creator", creatorRouter);
 app.use("/api/v1/courses", courseRouter);
+app.use("/api/v1/contact", contactRouter);
+app.use("/api/v1/instructors", instructorsRoute);
 
 // Web Routes (EJS)
 app.use("/", webRouter);

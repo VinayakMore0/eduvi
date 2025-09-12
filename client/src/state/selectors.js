@@ -13,7 +13,7 @@ export const selectedStandardSelector = selector({
   get: ({ get }) => {
     const selectedId = get(selectedStandardState);
     const standards = get(standardsDataState);
-    return standards.find((standard) => standard.id === selectedId);
+    return standards.find((standard) => standard._id === selectedId);
   },
 });
 

@@ -15,18 +15,8 @@ const userSchema = z.object({
     .string()
     .min(8)
     .max(100)
-    .refine((val) => /[A-Z]/.test(val), {
-      message: "Must include an uppercase letter",
-    })
-    .refine((val) => /[a-z]/.test(val), {
-      message: "Must include a lowercase letter",
-    })
-    .refine((val) => /[0-9]/.test(val), { message: "Must include a number" })
-    .refine((val) => /[^A-Za-z0-9]/.test(val), {
-      message: "Must include a special character",
-    }),
-  firstName: z.string().min(2).max(100),
-  lastName: z.string().min(2).max(100),
+    .refine((val) => /[0-9]/.test(val), { message: "Must include a number" }),
+  name: z.string().min(2).max(100),
 });
 
 userRouter.post("/signup", async function (req, res) {
@@ -42,8 +32,8 @@ userRouter.post("/signup", async function (req, res) {
       });
     }
 
-    const { email, password, firstName, lastName } = parsedData.data;
-    console.log("Validated data:", { email, firstName, lastName });
+    const { email, password, name } = parsedData.data;
+    console.log("Validated data:", { email, name });
 
     // Check if user already exists
     const existingUser = await userModel.findOne({ email });
@@ -59,14 +49,23 @@ userRouter.post("/signup", async function (req, res) {
     const newUser = await userModel.create({
       email,
       password: hashedPassword,
-      firstName,
-      lastName,
+      name,
+    });
+
+    const token = jwt.sign({ id: newUser._id.toString() }, JWT_USER_PASSWORD, {
+      expiresIn: "7d",
     });
 
     console.log("User created successfully:", newUser._id);
 
     res.status(201).json({
       message: "Signup successful",
+      token,
+      user: {
+        id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
+      },
     });
   } catch (error) {
     console.error("Error during signup:", error);
@@ -110,8 +109,7 @@ userRouter.post("/signin", async function (req, res) {
         user: {
           id: user._id,
           email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName,
+          name: user.name,
         },
       });
     } else {

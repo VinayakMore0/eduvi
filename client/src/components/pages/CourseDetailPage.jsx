@@ -16,63 +16,7 @@ import {
   Share2,
 } from "lucide-react";
 import { cartState, userState, wishlistState } from "../../state/atoms";
-
-// Mock API Service (replace with your actual API service)
-const ApiService = {
-  get: async (endpoint) => {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 500));
-
-    if (endpoint === "/courses") {
-      return {
-        data: [
-          {
-            id: 1,
-            title: "Complete Web Development Bootcamp",
-            description:
-              "Learn HTML, CSS, JavaScript, React, Node.js and become a full-stack developer",
-            instructor: "Dr. Sarah Johnson",
-            price: 89.99,
-            originalPrice: 199.99,
-            rating: 4.8,
-            students: 15420,
-            duration: "40 hours",
-            level: "beginner",
-            category: "web-development",
-            thumbnail:
-              "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400",
-            lessons: 156,
-            certificate: true,
-            bestseller: true,
-            lastUpdated: "2024-01-15",
-          },
-          {
-            id: 2,
-            title: "Machine Learning & Data Science Masterclass",
-            description:
-              "Master Python, TensorFlow, and build real-world ML projects",
-            instructor: "Prof. Michael Chen",
-            price: 129.99,
-            originalPrice: 249.99,
-            rating: 4.9,
-            students: 8750,
-            duration: "65 hours",
-            level: "intermediate",
-            category: "data-science",
-            thumbnail:
-              "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=400",
-            lessons: 198,
-            certificate: true,
-            bestseller: false,
-            lastUpdated: "2024-02-10",
-          },
-          // Add more courses as needed
-        ],
-      };
-    }
-    throw new Error("Endpoint not found");
-  },
-};
+import ApiService from "../../services/apiService";
 
 // Course Detail Page
 const CourseDetailPage = () => {
@@ -94,10 +38,8 @@ const CourseDetailPage = () => {
   const loadCourseDetail = async () => {
     try {
       setLoading(true);
-      const coursesResponse = await ApiService.get("/courses");
-      const courseDetail = coursesResponse.data.find(
-        (c) => c.id === parseInt(id)
-      );
+      // Convert id to number
+      const courseDetail = await ApiService.getCourse(id);
       setCourse(courseDetail);
     } catch (error) {
       toast.error("Failed to load course details");
@@ -114,7 +56,7 @@ const CourseDetailPage = () => {
       return;
     }
 
-    const isAlreadyInCart = cart.items?.some((item) => item.id === course.id);
+    const isAlreadyInCart = cart.items?.some((item) => item._id === course._id);
     if (isAlreadyInCart) {
       toast.error("Course already in cart");
       return;
@@ -135,12 +77,12 @@ const CourseDetailPage = () => {
       return;
     }
 
-    const isInWishlist = wishlist.includes(course.id);
+    const isInWishlist = wishlist.includes(course._id);
     if (isInWishlist) {
-      setWishlist((prev) => prev.filter((id) => id !== course.id));
+      setWishlist((prev) => prev.filter((id) => id !== course._id));
       toast.success("Removed from wishlist");
     } else {
-      setWishlist((prev) => [...prev, course.id]);
+      setWishlist((prev) => [...prev, course._id]);
       toast.success("Added to wishlist!");
     }
   };
@@ -239,13 +181,17 @@ const CourseDetailPage = () => {
                     </span>
                   )}
                   <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
-                    {course.level.charAt(0).toUpperCase() +
-                      course.level.slice(1)}
+                    {course.level
+                      ? course.level.charAt(0).toUpperCase() +
+                        course.level.slice(1)
+                      : "Level"}
                   </span>
                   <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
                     {course.category
-                      .replace("-", " ")
-                      .replace(/\b\w/g, (l) => l.toUpperCase())}
+                      ? course.category
+                          .replace("-", " ")
+                          .replace(/\b\w/g, (l) => l.toUpperCase())
+                      : "Category"}
                   </span>
                 </div>
 
@@ -268,7 +214,12 @@ const CourseDetailPage = () => {
                     <Star className="text-yellow-400 fill-current" size={16} />
                     <span className="font-semibold">{course.rating}</span>
                     <span className="text-gray-500">
-                      ({course.students.toLocaleString()} students)
+                      (
+                      {(typeof course.students === "number"
+                        ? course.students
+                        : 0
+                      ).toLocaleString()}{" "}
+                      students )
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -565,7 +516,7 @@ const CourseDetailPage = () => {
                   >
                     <Heart
                       className={`${
-                        wishlist.includes(course.id)
+                        wishlist.includes(course._id)
                           ? "text-red-500 fill-current"
                           : "text-gray-600"
                       }`}
@@ -590,7 +541,10 @@ const CourseDetailPage = () => {
                   <div className="flex items-center justify-between">
                     <span className="text-gray-600">Students enrolled</span>
                     <span className="font-semibold">
-                      {course.students.toLocaleString()}
+                      {(typeof course.students === "number"
+                        ? course.students
+                        : 0
+                      ).toLocaleString()}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">

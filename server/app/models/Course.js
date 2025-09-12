@@ -3,6 +3,11 @@ const { Schema } = mongoose;
 
 const courseSchema = new Schema(
   {
+    id: {
+      type: Number,
+      unique: true,
+      required: true,
+    },
     title: {
       type: String,
       required: true,
@@ -14,86 +19,68 @@ const courseSchema = new Schema(
       required: true,
       maxlength: 2000,
     },
-    shortDescription: {
-      type: String,
-      maxlength: 500,
+    instructor: {
+      type: String, // storing instructor name directly
+      required: true,
     },
     price: {
       type: Number,
       required: true,
       min: 0,
     },
-    discountPrice: {
+    originalPrice: {
       type: Number,
+      required: true,
       min: 0,
       validate: {
         validator: function (v) {
-          return !v || v < this.price;
+          return v >= this.price;
         },
-        message: "Discount price must be less than regular price",
+        message: "Original price must be greater than or equal to price",
       },
     },
-    imageUrl: {
-      type: String,
-      required: true,
+    rating: {
+      type: Number,
+      default: 0,
+      min: 0,
+      max: 5,
     },
-    thumbnailUrl: String,
-    instructorId: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
+    students: {
+      type: Number,
+      default: 0,
     },
-    category: {
-      type: String,
+    duration: {
+      type: String, // e.g. "40 hours"
       required: true,
-      enum: [
-        "programming",
-        "design",
-        "business",
-        "marketing",
-        "music",
-        "photography",
-        "other",
-      ],
     },
     level: {
       type: String,
       enum: ["beginner", "intermediate", "advanced"],
       default: "beginner",
     },
-    language: {
+    category: {
       type: String,
-      default: "en",
+      required: true,
     },
-    duration: {
-      hours: { type: Number, default: 0 },
-      minutes: { type: Number, default: 0 },
-    },
-    requirements: [String],
-    whatYouWillLearn: [String],
-    tags: [String],
-    status: {
+    thumbnail: {
       type: String,
-      enum: ["draft", "published", "archived"],
-      default: "draft",
+      required: true,
     },
-    isPublished: {
-      type: Boolean,
-      default: false,
-    },
-    publishedAt: Date,
-    enrollmentCount: {
+    lessons: {
       type: Number,
       default: 0,
     },
-    rating: {
-      average: { type: Number, default: 0, min: 0, max: 5 },
-      count: { type: Number, default: 0 },
+    certificate: {
+      type: Boolean,
+      default: false,
     },
-    metadata: {
-      totalLessons: { type: Number, default: 0 },
-      totalQuizzes: { type: Number, default: 0 },
-      totalAssignments: { type: Number, default: 0 },
+    bestseller: {
+      type: Boolean,
+      default: false,
+    },
+    lastUpdated: {
+      type: Date,
+      default: Date.now,
     },
   },
   {

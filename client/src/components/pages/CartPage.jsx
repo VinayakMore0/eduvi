@@ -6,8 +6,8 @@ const CartPage = () => {
 
   const removeFromCart = (courseId) => {
     setCart((prev) => ({
-      items: prev.items.filter((item) => item.id !== courseId),
-      total: prev.total - prev.items.find((item) => item.id === courseId).price,
+      items: prev.items.filter((item) => item._id !== courseId),
+      total: prev.total - prev.items.find((item) => item._id === courseId).price,
     }));
     toast.success("Course removed from cart");
   };
@@ -49,7 +49,7 @@ const CartPage = () => {
           <div className="lg:col-span-2 space-y-6">
             {cart.items.map((course) => (
               <div
-                key={course.id}
+                key={course._id}
                 className="bg-white rounded-lg shadow-sm p-6"
               >
                 <div className="flex items-start gap-4">
@@ -95,7 +95,7 @@ const CartPage = () => {
                       ${course.originalPrice}
                     </div>
                     <button
-                      onClick={() => removeFromCart(course.id)}
+                      onClick={() => removeFromCart(course._id)}
                       className="text-red-600 hover:text-red-700 text-sm mt-2"
                     >
                       Remove

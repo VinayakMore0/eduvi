@@ -5,6 +5,7 @@ import { authFormState, routerState, userState } from "../../state/atoms";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
+import ApiService from "../../services/apiService";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -28,25 +29,26 @@ const LoginPage = () => {
     setLoading(true);
 
     try {
-      const response = await ApiService.post("/auth/login", {
+      const response = await ApiService.login({
         email: formData.email,
         password: formData.password,
       });
 
       setUser({
         isAuthenticated: true,
-        user: response.data.user,
-        token: response.data.token,
+        user: response.user,
+        token: response.token,
       });
 
       if (formData.rememberMe) {
-        localStorage.setItem("eduvi_token", response.data.token);
-        localStorage.setItem("eduvi_user", JSON.stringify(response.data.user));
+        localStorage.setItem("eduvi_token", response.token);
+        localStorage.setItem("eduvi_user", JSON.stringify(response.user));
       }
 
       toast.success("Login successful!");
       navigate("/dashboard");
     } catch (error) {
+      console.error(error);
       toast.error(error.message || "Login failed");
     } finally {
       setLoading(false);

@@ -1,6 +1,8 @@
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import toast from "react-hot-toast";
+import ApiService from "../../services/apiService";
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -16,11 +18,12 @@ const ContactPage = () => {
     setLoading(true);
 
     try {
-      await ApiService.post("/contact", formData);
+      await ApiService.sendContactMessage(formData);
       toast.success("Message sent successfully!");
       setFormData({ name: "", email: "", subject: "", message: "" });
     } catch (error) {
       toast.error("Failed to send message");
+      console.error(error);
     } finally {
       setLoading(false);
     }

@@ -19,6 +19,7 @@ import { filteredCoursesSelector } from "../../state/selectors";
 import { AnimatePresence, motion } from "framer-motion";
 import CourseCard from "../ui/CourseCard";
 import toast from "react-hot-toast";
+import ApiService from "../../services/apiService";
 
 const CoursesPage = () => {
   const [courses, setCourses] = useRecoilState(coursesState);
@@ -34,10 +35,10 @@ const CoursesPage = () => {
   const loadCourses = async () => {
     setCourses((prev) => ({ ...prev, loading: true }));
     try {
-      const response = await ApiService.get("/courses");
+      const allCourses = await ApiService.getAllCourses();
       setCourses((prev) => ({
         ...prev,
-        courses: response.data,
+        courses: allCourses.courses ?? [],
         loading: false,
       }));
     } catch (error) {
@@ -47,6 +48,7 @@ const CoursesPage = () => {
         loading: false,
       }));
       toast.error("Failed to load courses");
+      console.error(error);
     }
   };
 
@@ -244,12 +246,12 @@ const CoursesPage = () => {
             </h3>
             <p className="text-gray-600">
               Try adjusting your search criteria or filters
-            </p>
+            </p>  
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredCourses.map((course) => (
-              <CourseCard key={course.id} course={course} />
+              <CourseCard key={course._id} course={course} />
             ))}
           </div>
         )}

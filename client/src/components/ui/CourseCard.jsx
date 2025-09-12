@@ -19,7 +19,7 @@ const CourseCard = ({ course }) => {
       return;
     }
 
-    const isAlreadyInCart = cart.items.some((item) => item.id === course.id);
+    const isAlreadyInCart = cart.items.some((item) => item._id === course._id);
     if (isAlreadyInCart) {
       toast.error("Course already in cart");
       return;
@@ -39,12 +39,12 @@ const CourseCard = ({ course }) => {
       return;
     }
 
-    const isInWishlist = wishlist.includes(course.id);
+    const isInWishlist = wishlist.includes(course._id);
     if (isInWishlist) {
-      setWishlist((prev) => prev.filter((id) => id !== course.id));
+      setWishlist((prev) => prev.filter((id) => id !== course._id));
       toast.success("Removed from wishlist");
     } else {
-      setWishlist((prev) => [...prev, course.id]);
+      setWishlist((prev) => [...prev, course._id]);
       toast.success("Added to wishlist!");
     }
   };
@@ -85,7 +85,7 @@ const CourseCard = ({ course }) => {
         >
           <Heart
             className={`${
-              wishlist.includes(course.id)
+              wishlist.includes(course._id)
                 ? "text-red-500 fill-current"
                 : "text-gray-600"
             }`}
@@ -94,7 +94,7 @@ const CourseCard = ({ course }) => {
         </button>
         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
           <button
-            onClick={() => navigate(`/course/${course.id}`)}
+            onClick={() => navigate(`/course/${course._id}`)}
             className="bg-white text-gray-900 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors flex items-center gap-2"
           >
             <Play size={16} />
@@ -156,7 +156,7 @@ const CourseCard = ({ course }) => {
             Add to Cart
           </button>
           <button
-            onClick={() => navigate(`/course/${course.id}`)}
+            onClick={() => navigate(`/course/${course._id}`)}
             className="px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
           >
             <BookOpen size={20} />

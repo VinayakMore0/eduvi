@@ -30,10 +30,10 @@ const StandardsSection = () => {
           <div className="space-y-4">
             {standards.slice(0, 8).map((standard) => (
               <div
-                key={standard.id}
-                onClick={() => setSelectedStandard(standard.id)}
+                key={standard._id}
+                onClick={() => setSelectedStandard(standard._id)}
                 className={`p-6 rounded-xl cursor-pointer transition-all duration-300 ${
-                  selectedStandard === standard.id
+                  selectedStandard === standard._id
                     ? "bg-blue-600 text-white shadow-lg scale-105"
                     : "bg-white text-gray-900 hover:shadow-md hover:bg-blue-50"
                 }`}
@@ -41,7 +41,7 @@ const StandardsSection = () => {
                 <h3 className="text-xl font-semibold mb-2">{standard.title}</h3>
                 <p
                   className={`${
-                    selectedStandard === standard.id
+                    selectedStandard === standard._id
                       ? "text-blue-100"
                       : "text-gray-600"
                   }`}

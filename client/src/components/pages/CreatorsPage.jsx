@@ -44,7 +44,7 @@ const CreatorsPage = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 mb-12">
           {creators.map((creator) => (
             <div
-              key={creator.id}
+              key={creator._id}
               className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow"
             >
               <div className="flex items-start gap-6">

@@ -5,6 +5,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
+import ApiService from "../../services/apiService";
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -42,7 +43,7 @@ const RegisterPage = () => {
     setLoading(true);
 
     try {
-      const response = await ApiService.post("/auth/register", {
+      const response = await ApiService.register({
         name: formData.name,
         email: formData.email,
         password: formData.password,
@@ -50,17 +51,18 @@ const RegisterPage = () => {
 
       setUser({
         isAuthenticated: true,
-        user: response.data.user,
-        token: response.data.token,
+        user: response.user,
+        token: response.token,  
       });
 
-      localStorage.setItem("eduvi_token", response.data.token);
-      localStorage.setItem("eduvi_user", JSON.stringify(response.data.user));
+      localStorage.setItem("eduvi_token", response.token);
+      localStorage.setItem("eduvi_user", JSON.stringify(response.user));
 
       toast.success("Registration successful!");
       navigate("/dashboard");
     } catch (error) {
       toast.error(error.message || "Registration failed");
+      console.error(error);
     } finally {
       setLoading(false);
     }

@@ -267,25 +267,25 @@
 
 // export default ApiService;
 
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
-import axios from 'axios';
-import { toast } from 'react-hot-toast';
-
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://api.eduvi.com';
+const API_BASE_URL =
+  import.meta.env?.VITE_API_URL || "http://localhost:5000/api/v1/";
 
 // Create axios instance
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
 // Request interceptor
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('eduvi_token');
+    const token = localStorage.getItem("eduvi_token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -301,12 +301,13 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('eduvi_token');
-      localStorage.removeItem('eduvi_user');
-      window.location.href = '/login';
+      localStorage.removeItem("eduvi_token");
+      localStorage.removeItem("eduvi_user");
+      window.location.href = "/login";
     }
 
-    const message = error.response?.data?.message || error.message || 'An error occurred';
+    const message =
+      error.response?.data?.message || error.message || "An error occurred";
     toast.error(message);
 
     return Promise.reject(error);
@@ -318,7 +319,7 @@ class ApiService {
   // Auth endpoints
   static async login(credentials) {
     try {
-      const response = await apiClient.post('/auth/login', credentials);
+      const response = await apiClient.post("/user/signin", credentials);
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -327,7 +328,7 @@ class ApiService {
 
   static async register(userData) {
     try {
-      const response = await apiClient.post('/auth/register', userData);
+      const response = await apiClient.post("/user/signup", userData);
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -336,7 +337,7 @@ class ApiService {
 
   static async refreshToken() {
     try {
-      const response = await apiClient.post('/auth/refresh');
+      const response = await apiClient.post("/auth/refresh");
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -345,16 +346,25 @@ class ApiService {
 
   static async logout() {
     try {
-      await apiClient.post('/auth/logout');
+      await apiClient.post("/auth/logout");
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
     }
   }
 
   // Courses endpoints
   static async getCourses(params = {}) {
     try {
-      const response = await apiClient.get('/courses', { params });
+      const response = await apiClient.get("/courses", { params });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  }
+
+  static async getAllCourses() {
+    try {
+      const response = await apiClient.get("/courses/all");
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -372,8 +382,8 @@ class ApiService {
 
   static async searchCourses(query, filters = {}) {
     try {
-      const response = await apiClient.get('/courses/search', {
-        params: { q: query, ...filters }
+      const response = await apiClient.get("/courses/search", {
+        params: { q: query, ...filters },
       });
       return response.data;
     } catch (error) {
@@ -382,11 +392,12 @@ class ApiService {
   }
 
   // Instructors endpoints
-  static async getInstructors(params = {}) {
+  static async getInstructors() {
     try {
-      const response = await apiClient.get('/instructors', { params });
+      const response = await apiClient.get("/instructors");
       return response.data;
     } catch (error) {
+      console.error("Error fetching instructors:", err.response?.data || err);
       throw error.response?.data || error;
     }
   }
@@ -403,7 +414,7 @@ class ApiService {
   // User endpoints
   static async getProfile() {
     try {
-      const response = await apiClient.get('/user/profile');
+      const response = await apiClient.get("/user/profile");
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -412,7 +423,7 @@ class ApiService {
 
   static async updateProfile(userData) {
     try {
-      const response = await apiClient.put('/user/profile', userData);
+      const response = await apiClient.put("/user/profile", userData);
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -430,7 +441,7 @@ class ApiService {
 
   static async getEnrollments() {
     try {
-      const response = await apiClient.get('/enrollments');
+      const response = await apiClient.get("/enrollments");
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -440,7 +451,9 @@ class ApiService {
   // Reviews endpoints
   static async getCourseReviews(courseId, params = {}) {
     try {
-      const response = await apiClient.get(`/courses/${courseId}/reviews`, { params });
+      const response = await apiClient.get(`/courses/${courseId}/reviews`, {
+        params,
+      });
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -449,7 +462,10 @@ class ApiService {
 
   static async createReview(courseId, reviewData) {
     try {
-      const response = await apiClient.post(`/courses/${courseId}/reviews`, reviewData);
+      const response = await apiClient.post(
+        `/courses/${courseId}/reviews`,
+        reviewData
+      );
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -459,7 +475,9 @@ class ApiService {
   // Payment endpoints
   static async createPaymentIntent(items) {
     try {
-      const response = await apiClient.post('/payments/create-intent', { items });
+      const response = await apiClient.post("/payments/create-intent", {
+        items,
+      });
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -468,9 +486,9 @@ class ApiService {
 
   static async confirmPayment(paymentIntentId, paymentMethodId) {
     try {
-      const response = await apiClient.post('/payments/confirm', {
+      const response = await apiClient.post("/payments/confirm", {
         paymentIntentId,
-        paymentMethodId
+        paymentMethodId,
       });
       return response.data;
     } catch (error) {
@@ -481,7 +499,7 @@ class ApiService {
   // Wishlist endpoints
   static async getWishlist() {
     try {
-      const response = await apiClient.get('/wishlist');
+      const response = await apiClient.get("/wishlist");
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -490,7 +508,7 @@ class ApiService {
 
   static async addToWishlist(courseId) {
     try {
-      const response = await apiClient.post('/wishlist', { courseId });
+      const response = await apiClient.post("/wishlist", { courseId });
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -509,7 +527,7 @@ class ApiService {
   // Contact endpoints
   static async sendContactMessage(messageData) {
     try {
-      const response = await apiClient.post('/contact', messageData);
+      const response = await apiClient.post("/contact", messageData);
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -528,10 +546,10 @@ class ApiService {
 
   static async trackProgress(courseId, lessonId, progress) {
     try {
-      const response = await apiClient.post('/progress', {
+      const response = await apiClient.post("/progress", {
         courseId,
         lessonId,
-        progress
+        progress,
       });
       return response.data;
     } catch (error) {

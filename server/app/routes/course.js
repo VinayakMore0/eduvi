@@ -50,6 +50,18 @@ courseRouter.post("/purchase", userMiddleware, async function (req, res) {
   }
 });
 
+courseRouter.get("/all", async function (req, res) {
+  try {
+    const courses = await courseModel.find({});
+    res.json({ courses });
+  } catch (error) {
+    console.error("Error fetching courses:", error);
+    res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+});
+
 // Get course by ID
 courseRouter.get("/:id", async function (req, res) {
   try {

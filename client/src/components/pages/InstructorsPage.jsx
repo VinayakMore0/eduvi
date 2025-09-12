@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
+import ApiService from "../../services/apiService";
+import { CheckCircle, Github, Linkedin, Star, Twitter } from "lucide-react";
 
 const InstructorsPage = () => {
   const [instructors, setInstructors] = useState([]);
@@ -12,10 +14,12 @@ const InstructorsPage = () => {
 
   const loadInstructors = async () => {
     try {
-      const response = await ApiService.get("/instructors");
-      setInstructors(response.data);
+      const response = await ApiService.getInstructors();
+      const result = response.data ? response.data : response;
+      setInstructors(result.instructors || []);
     } catch (error) {
       toast.error("Failed to load instructors");
+      console.error("Error fetching instructors:", error);
     } finally {
       setLoading(false);
     }
@@ -74,7 +78,7 @@ const InstructorsPage = () => {
         <div className="grid md:grid-cols-1 lg:grid-cols-1 gap-8 mb-12">
           {instructors.map((instructor, index) => (
             <motion.div
-              key={instructor.id}
+              key={instructor._id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
