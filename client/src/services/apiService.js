@@ -448,6 +448,106 @@ class ApiService {
     }
   }
 
+  // Dashboard specific endpoints
+  static async getDashboardData() {
+    try {
+      // In a real app, this would be a single endpoint
+      // For now, we'll simulate by calling multiple endpoints
+      const [enrollments, profile, paymentHistory] = await Promise.all([
+        this.getEnrollments(),
+        this.getProfile(),
+        this.getPaymentHistory(),
+      ]);
+
+      return {
+        data: {
+          enrollments: enrollments.data.enrollments,
+          profile: profile.data.user,
+          payments: paymentHistory.data.payments,
+        },
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Get user's learning stats
+  static async getLearningStats() {
+    const response = await apiClient.get("/user/learning-stats");
+    return response.data;
+  }
+
+  // Course progress tracking
+  static async getCourseProgress(courseId) {
+    const response = await apiClient.get(`/enrollments/${courseId}/progress`);
+    return response.data;
+  }
+
+  static async updateProgress(courseId, progressData) {
+    const response = await apiClient.put(
+      `/enrollments/${courseId}/progress`,
+      progressData
+    );
+    return response.data;
+  }
+
+  // Instructor application
+  static async applyToBeInstructor(applicationData) {
+    const response = await apiClient.post(
+      "/instructors/apply",
+      applicationData
+    );
+    return response.data;
+  }
+
+  // Instructor course management
+  static async getInstructorCourses() {
+    const response = await apiClient.get("/instructor/courses");
+    return response.data;
+  }
+
+  static async createInstructorCourse(courseData) {
+    const response = await apiClient.post("/instructor/courses", courseData);
+    return response.data;
+  }
+
+  static async updateInstructorCourse(courseId, courseData) {
+    const response = await apiClient.put(
+      `/instructor/courses/${courseId}`,
+      courseData
+    );
+    return response.data;
+  }
+
+  static async getInstructorDashboard() {
+    const response = await apiClient.get("/instructor/dashboard");
+    return response.data;
+  }
+
+  // Certificate generation
+  static async generateCertificate(enrollmentId) {
+    const response = await apiClient.post(
+      `/certificates/generate/${enrollmentId}`
+    );
+    return response.data;
+  }
+
+  // Get certificates
+  static async getCertificates() {
+    const response = await apiClient.get("/user/certificates");
+    return response.data;
+  }
+
+  static async downloadCertificate(certificateId) {
+    const response = await apiClient.get(
+      `/certificates/download/${certificateId}`,
+      {
+        responseType: "blob",
+      }
+    );
+    return response.data;
+  }
+
   // Reviews endpoints
   static async getCourseReviews(courseId, params = {}) {
     try {
@@ -458,6 +558,14 @@ class ApiService {
     } catch (error) {
       throw error.response?.data || error;
     }
+  }
+
+  static async createCourseReview(courseId, reviewData) {
+    const response = await apiClient.post(
+      `/courses/${courseId}/reviews`,
+      reviewData
+    );
+    return response.data;
   }
 
   static async createReview(courseId, reviewData) {
@@ -555,6 +663,185 @@ class ApiService {
     } catch (error) {
       throw error.response?.data || error;
     }
+  }
+
+  // Mock data for development (remove in production)
+  static async getMockDashboardData() {
+    // Simulate API delay
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    return {
+      data: {
+        enrollments: [
+          {
+            _id: "1",
+            course: {
+              _id: "course1",
+              title: "Complete Web Development Bootcamp",
+              thumbnail:
+                "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400",
+              instructor: {
+                name: "Dr. Sarah Johnson",
+                avatar: {
+                  url: "https://images.unsplash.com/photo-1494790108755-2616b612b494?w=150",
+                },
+              },
+              rating: 4.8,
+              level: "beginner",
+              duration: "40 hours",
+              totalLessons: 156,
+            },
+            completionPercentage: 65,
+            isCompleted: false,
+            enrolledAt: new Date("2024-01-15"),
+            lastAccessedAt: new Date("2024-03-10"),
+            progress: [
+              {
+                lessonId: "lesson1",
+                completed: true,
+                completedAt: new Date("2024-01-16"),
+                watchTime: 600,
+              },
+              {
+                lessonId: "lesson2",
+                completed: true,
+                completedAt: new Date("2024-01-17"),
+                watchTime: 450,
+              },
+              { lessonId: "lesson3", completed: false, watchTime: 200 },
+            ],
+          },
+          {
+            _id: "2",
+            course: {
+              _id: "course2",
+              title: "Machine Learning & Data Science Masterclass",
+              thumbnail:
+                "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=400",
+              instructor: {
+                name: "Prof. Michael Chen",
+                avatar: {
+                  url: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150",
+                },
+              },
+              rating: 4.9,
+              level: "intermediate",
+              duration: "65 hours",
+              totalLessons: 198,
+            },
+            completionPercentage: 100,
+            isCompleted: true,
+            enrolledAt: new Date("2024-02-01"),
+            completedAt: new Date("2024-03-15"),
+            certificateId: "cert123",
+            progress: [],
+          },
+          {
+            _id: "3",
+            course: {
+              _id: "course3",
+              title: "UX/UI Design Complete Course",
+              thumbnail:
+                "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=400",
+              instructor: {
+                name: "Emily Rodriguez",
+                avatar: {
+                  url: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150",
+                },
+              },
+              rating: 4.7,
+              level: "beginner",
+              duration: "30 hours",
+              totalLessons: 120,
+            },
+            completionPercentage: 25,
+            isCompleted: false,
+            enrolledAt: new Date("2024-03-05"),
+            lastAccessedAt: new Date("2024-03-12"),
+            progress: [],
+          },
+          {
+            _id: "4",
+            course: {
+              _id: "course4",
+              title: "Advanced React & Redux",
+              thumbnail:
+                "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=400",
+              instructor: {
+                name: "David Kumar",
+                avatar: {
+                  url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150",
+                },
+              },
+              rating: 4.8,
+              level: "advanced",
+              duration: "45 hours",
+              totalLessons: 178,
+            },
+            completionPercentage: 0,
+            isCompleted: false,
+            enrolledAt: new Date("2024-03-12"),
+            lastAccessedAt: null,
+            progress: [],
+          },
+        ],
+        payments: [
+          {
+            _id: "payment1",
+            courses: [
+              {
+                course: { title: "Complete Web Development Bootcamp" },
+                price: 89.99,
+              },
+              {
+                course: { title: "UX/UI Design Complete Course" },
+                price: 79.99,
+              },
+            ],
+            totalAmount: 169.98,
+            status: "completed",
+            createdAt: new Date("2024-01-15"),
+            paymentMethod: "card",
+          },
+          {
+            _id: "payment2",
+            courses: [
+              {
+                course: {
+                  title: "Machine Learning & Data Science Masterclass",
+                },
+                price: 129.99,
+              },
+            ],
+            totalAmount: 129.99,
+            status: "completed",
+            createdAt: new Date("2024-02-01"),
+            paymentMethod: "card",
+          },
+          {
+            _id: "payment3",
+            courses: [
+              { course: { title: "Advanced React & Redux" }, price: 99.99 },
+            ],
+            totalAmount: 99.99,
+            status: "completed",
+            createdAt: new Date("2024-03-12"),
+            paymentMethod: "card",
+          },
+        ],
+        certificates: [
+          {
+            _id: "cert123",
+            course: {
+              title: "Machine Learning & Data Science Masterclass",
+              instructor: "Prof. Michael Chen",
+            },
+            issuedAt: new Date("2024-03-15"),
+            certificateUrl: "https://certificates.eduvi.com/cert123.pdf",
+          },
+        ],
+      },
+    };
   }
 }
 

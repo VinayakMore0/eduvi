@@ -21,6 +21,12 @@ import AboutPage from "./components/pages/AboutPage";
 import ContactPage from "./components/pages/ContactPage";
 import CartPage from "./components/pages/CartPage";
 import DashboardPage from "./components/pages/DashboardPage";
+import CoursePlayerPage from "./components/pages/CoursePlayerPage";
+import InstructorDetailPage from "./components/pages/InstructorDetailPage";
+import InstructorDashboardPage from "./components/pages/InstructorDashboardPage";
+import CreateCoursePage from "./components/pages/CreateCoursePage";
+import InstructorGuidePage from "./components/pages/InstructorGuidePage";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 // Create a separate component for the app logic that uses Recoil
 const AppContent = () => {
@@ -73,6 +79,28 @@ const AppContent = () => {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
+            <Route
+              path="/course/:courseId/learn"
+              element={<CoursePlayerPage />}
+            />
+            <Route path="/instructor/:id" element={<InstructorDetailPage />} />
+            <Route path="/instructor-guide" element={<InstructorGuidePage />} />
+            <Route
+              path="/instructor/dashboard"
+              element={
+                <ProtectedRoute requireRole="instructor">
+                  <InstructorDashboardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/instructor/create-course"
+              element={
+                <ProtectedRoute requireRole="instructor">
+                  <CreateCoursePage />
+                </ProtectedRoute>
+              }
+            />
             {/* Add a catch-all route for 404 */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
