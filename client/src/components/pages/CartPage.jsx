@@ -1,4 +1,3 @@
-// src/components/pages/CartPage.jsx (Updated with dummy payment)
 import React, { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Link, useNavigate } from "react-router-dom";
@@ -15,6 +14,7 @@ import {
   Shield,
 } from "lucide-react";
 import { cartState, userState } from "../../state/atoms";
+import ApiService from "../../services/apiService";
 
 const CartPage = () => {
   const [cart, setCart] = useRecoilState(cartState);
@@ -50,7 +50,7 @@ const CartPage = () => {
   const calculateDiscount = () => {
     const subtotal = calculateSubtotal();
     const originalTotal = cart.items.reduce(
-      (sum, item) => sum + item.originalPrice,
+      (sum, item) => sum + (item.originalPrice || item.price),
       0
     );
     return originalTotal - subtotal;
@@ -82,36 +82,74 @@ const CartPage = () => {
   const enrollInFreeCourses = async () => {
     setLoading(true);
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      // Process free course enrollment
+      const enrollmentData = {
+        courses: cart.items.map((course) => ({
+          courseId: course.id,
+          price: 0,
+          title: course.title,
+        })),
+        totalAmount: 0,
+        paymentMethod: "free",
+      };
 
-      toast.success(
-        `Successfully enrolled in ${cart.items.length} free course(s)!`
-      );
-      setCart({ items: [], total: 0 });
-      navigate("/dashboard");
+      const response = await ApiService.processDummyPayment(enrollmentData);
+
+      if (response.success) {
+        toast.success(
+          `Successfully enrolled in ${cart.items.length} free course(s)!`
+        );
+        setCart({ items: [], total: 0 });
+        navigate("/dashboard");
+      } else {
+        throw new Error(response.message || "Enrollment failed");
+      }
     } catch (error) {
-      toast.error("Failed to enroll in courses");
+      console.error("Enrollment error:", error);
+      toast.error(
+        error.message || "Failed to enroll in courses. Please try again."
+      );
     } finally {
       setLoading(false);
     }
   };
 
   const handlePayment = async (paymentData) => {
-    setLoading(true);
-    try {
-      // Simulate payment processing
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+    // now a normal function
+    if (!user || !user._id) {
+      toast.error("User not found. Please login again.");
+      return;
+    }
 
-      // Simulate enrollment after successful payment
-      toast.success("Payment successful! You are now enrolled in the courses.");
-      setCart({ items: [], total: 0 });
-      setShowPaymentModal(false);
-      navigate("/dashboard");
-    } catch (error) {
-      toast.error("Payment failed. Please try again.");
-    } finally {
-      setLoading(false);
+    try {
+      const payload = {
+        userId: user._id,
+        items: cart.items.map((course) => ({
+          courseId: course.id,
+          title: course.title,
+          price: course.price,
+          discountPrice: course.discountPrice || 0,
+          finalPrice: course.discountPrice
+            ? course.discountPrice
+            : course.price,
+        })),
+        totalAmount: cart.items.reduce((sum, item) => sum + item.price, 0),
+        paymentMethod: "dummy",
+        paymentData,
+      };
+
+      const response = await ApiService.processDummyPayment(payload);
+
+      if (response.data.success) {
+        toast.success("Payment successful!");
+        setCart({ items: [], total: 0 });
+        navigate("/dashboard");
+      } else {
+        toast.error(response.data.message || "Payment failed");
+      }
+    } catch (err) {
+      console.error("Payment error:", err);
+      toast.error("Something went wrong during payment");
     }
   };
 
@@ -145,8 +183,6 @@ const CartPage = () => {
   const subtotal = calculateSubtotal();
   const discount = calculateDiscount();
   const total = subtotal;
-  const freeCourses = cart.items.filter((item) => item.price === 0);
-  const paidCourses = cart.items.filter((item) => item.price > 0);
 
   return (
     <div className="pt-20 min-h-screen bg-gray-50">
@@ -228,11 +264,12 @@ const CartPage = () => {
                           <div className="text-lg font-bold text-gray-900">
                             ${course.price}
                           </div>
-                          {course.originalPrice > course.price && (
-                            <div className="text-sm text-gray-400 line-through">
-                              ${course.originalPrice}
-                            </div>
-                          )}
+                          {course.originalPrice &&
+                            course.originalPrice > course.price && (
+                              <div className="text-sm text-gray-400 line-through">
+                                ${course.originalPrice}
+                              </div>
+                            )}
                         </>
                       )}
                       <button
@@ -345,14 +382,32 @@ const PaymentModal = ({
 }) => {
   const [paymentData, setPaymentData] = useState({
     cardNumber: "4242 4242 4242 4242",
-    expiryDate: "12/25",
+    expiryDate: "12/28",
     cvv: "123",
     cardName: "John Doe",
+    email: "john@example.com",
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onPayment(paymentData);
+  };
+
+  const formatCardNumber = (value) => {
+    const v = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
+    const matches = v.match(/\d{4,16}/g);
+    const match = (matches && matches[0]) || "";
+    const parts = [];
+
+    for (let i = 0, len = match.length; i < len; i += 4) {
+      parts.push(match.substring(i, i + 4));
+    }
+
+    if (parts.length) {
+      return parts.join(" ");
+    } else {
+      return v;
+    }
   };
 
   if (!isOpen) return null;
@@ -367,7 +422,7 @@ const PaymentModal = ({
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="relative bg-white rounded-2xl p-8 max-w-md w-full"
+          className="relative bg-white rounded-2xl p-8 max-w-md w-full max-h-[90vh] overflow-y-auto"
         >
           <h2 className="text-2xl font-bold text-gray-900 mb-6">
             Complete Payment
@@ -375,11 +430,15 @@ const PaymentModal = ({
 
           <div className="mb-6">
             <h3 className="font-semibold text-gray-900 mb-3">Order Summary</h3>
-            <div className="space-y-2">
+            <div className="space-y-2 max-h-32 overflow-y-auto">
               {courses.map((course) => (
                 <div key={course.id} className="flex justify-between text-sm">
-                  <span className="text-gray-600 truncate">{course.title}</span>
-                  <span className="font-medium">${course.price}</span>
+                  <span className="text-gray-600 truncate flex-1 mr-2">
+                    {course.title}
+                  </span>
+                  <span className="font-medium">
+                    ${course.price.toFixed(2)}
+                  </span>
                 </div>
               ))}
             </div>
@@ -392,12 +451,28 @@ const PaymentModal = ({
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-              <p className="text-sm text-yellow-800">
-                <strong>Demo Payment:</strong> This is a dummy payment system.
-                Use the pre-filled card details or any values to simulate
-                payment.
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+              <p className="text-sm text-blue-800">
+                <strong>Demo Payment:</strong> This is a dummy payment system
+                for demo purposes. The courses will be added to your account
+                after "payment".
               </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Email Address
+              </label>
+              <input
+                type="email"
+                value={paymentData.email}
+                onChange={(e) =>
+                  setPaymentData({ ...paymentData, email: e.target.value })
+                }
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="your@email.com"
+                required
+              />
             </div>
 
             <div>
@@ -408,10 +483,15 @@ const PaymentModal = ({
                 type="text"
                 value={paymentData.cardNumber}
                 onChange={(e) =>
-                  setPaymentData({ ...paymentData, cardNumber: e.target.value })
+                  setPaymentData({
+                    ...paymentData,
+                    cardNumber: formatCardNumber(e.target.value),
+                  })
                 }
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="1234 5678 9012 3456"
+                placeholder="4242 4242 4242 4242"
+                maxLength="19"
+                required
               />
             </div>
 
@@ -423,14 +503,21 @@ const PaymentModal = ({
                 <input
                   type="text"
                   value={paymentData.expiryDate}
-                  onChange={(e) =>
+                  onChange={(e) => {
+                    let value = e.target.value.replace(/\D/g, "");
+                    if (value.length >= 2) {
+                      value =
+                        value.substring(0, 2) + "/" + value.substring(2, 4);
+                    }
                     setPaymentData({
                       ...paymentData,
-                      expiryDate: e.target.value,
-                    })
-                  }
+                      expiryDate: value,
+                    });
+                  }}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="MM/YY"
+                  maxLength="5"
+                  required
                 />
               </div>
               <div>
@@ -441,10 +528,15 @@ const PaymentModal = ({
                   type="text"
                   value={paymentData.cvv}
                   onChange={(e) =>
-                    setPaymentData({ ...paymentData, cvv: e.target.value })
+                    setPaymentData({
+                      ...paymentData,
+                      cvv: e.target.value.replace(/\D/g, ""),
+                    })
                   }
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="123"
+                  maxLength="4"
+                  required
                 />
               </div>
             </div>
@@ -461,6 +553,7 @@ const PaymentModal = ({
                 }
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="John Doe"
+                required
               />
             </div>
 
@@ -483,7 +576,7 @@ const PaymentModal = ({
                 ) : (
                   <>
                     <CheckCircle size={16} />
-                    Pay ${total.toFixed(2)}
+                    Complete Purchase
                   </>
                 )}
               </button>

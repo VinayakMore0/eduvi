@@ -5,9 +5,6 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
-// const passport = require("passport");
-// require("./middleware/passport")(passport);
-const path = require("path");
 
 const { userRouter } = require("./routes/user");
 const { courseRouter } = require("./routes/course");
@@ -19,18 +16,16 @@ const contactRouter = require("./routes/contact");
 const instructorsRoute = require("./routes/instructors");
 
 const app = express();
-// app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(
   cors({
     origin: process.env.CORS_ORIGIN || "*",
     credentials: true,
   })
 ); // Enable CORS with credentials
-app.use(morgan('dev')); // Request logging
+app.use(morgan("dev")); // Request logging
 app.use(express.json()); // parse JSON bodies
 app.use(express.urlencoded({ extended: true })); // For parsing form data
 app.use(cookieParser(process.env.COOKIE_SECRET)); // Parse cookies
-// app.use(passport.initialize());
 
 // Apply rate limiting to all API routes
 app.use("/api/", apiLimiter);
@@ -47,6 +42,8 @@ app.use("/api/v1/creator", creatorRouter);
 app.use("/api/v1/courses", courseRouter);
 app.use("/api/v1/contact", contactRouter);
 app.use("/api/v1/instructors", instructorsRoute);
+app.use("/api/v1/enrollments", require("./routes/enrollments"));
+app.use("/api/v1/payments", require("./routes/payments"));
 
 // Web Routes (EJS)
 app.use("/", webRouter);

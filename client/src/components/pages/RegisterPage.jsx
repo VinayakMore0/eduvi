@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { authFormState, routerState, userState } from "../../state/atoms";
+import { userState } from "../../state/atoms";
 import { Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -52,7 +52,7 @@ const RegisterPage = () => {
       setUser({
         isAuthenticated: true,
         user: response.user,
-        token: response.token,  
+        token: response.token,
       });
 
       localStorage.setItem("eduvi_token", response.token);

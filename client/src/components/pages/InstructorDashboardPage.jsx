@@ -1,4 +1,3 @@
-// src/components/pages/InstructorDashboardPage.jsx
 import React, { useState, useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import { Link, useNavigate } from "react-router-dom";
@@ -8,13 +7,10 @@ import {
   BookOpen,
   Users,
   DollarSign,
-  TrendingUp,
   Plus,
   Eye,
   Edit,
   Trash2,
-  BarChart3,
-  Calendar,
   Star,
 } from "lucide-react";
 import { userState } from "../../state/atoms";

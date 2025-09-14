@@ -1,6 +1,4 @@
 import React from "react";
-import { useRecoilState } from "recoil";
-import { routerState } from "../../state/atoms";
 import { Github, Linkedin, Twitter } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -17,19 +15,22 @@ const Footer = () => {
             </p>
             <div className="flex space-x-4 mt-4">
               <a
-                href="#"
+                target="_blank"
+                href="https://x.com/VinayakMore0"
                 className="text-gray-400 hover:text-white transition-colors"
               >
                 <Twitter size={20} />
               </a>
               <a
-                href="#"
+                target="_blank"
+                href="https://www.linkedin.com/in/vinayak-more-942702313/"
                 className="text-gray-400 hover:text-white transition-colors"
               >
                 <Linkedin size={20} />
               </a>
               <a
-                href="#"
+                target="_blank"
+                href="https://github.com/VinayakMore0"
                 className="text-gray-400 hover:text-white transition-colors"
               >
                 <Github size={20} />
@@ -80,7 +81,7 @@ const Footer = () => {
             <ul className="space-y-2">
               <li>
                 <a
-                  href="#"
+                  href="/courses"
                   className="text-gray-300 hover:text-white transition-colors"
                 >
                   Web Development
@@ -88,7 +89,7 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/courses"
                   className="text-gray-300 hover:text-white transition-colors"
                 >
                   Data Science
@@ -96,7 +97,7 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/courses"
                   className="text-gray-300 hover:text-white transition-colors"
                 >
                   Design
@@ -104,7 +105,7 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/courses"
                   className="text-gray-300 hover:text-white transition-colors"
                 >
                   Marketing
@@ -133,7 +134,7 @@ const Footer = () => {
 
         <div className="border-t border-gray-800 pt-8 text-center">
           <p className="text-gray-400">
-            © 2024 Eduvi. All rights reserved. Made with ❤️ for learners
+            © 2025 Eduvi. All rights reserved. Made with ❤️ for learners
             worldwide.
           </p>
         </div>

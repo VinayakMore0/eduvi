@@ -1,20 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import {
-  Search,
-  Filter,
-  Clock,
-  Star,
-  Play,
-  ChevronDown,
-  ChevronUp,
-  BookOpen,
-} from "lucide-react";
-import {
-  coursesFilterState,
-  coursesState,
-  filtersState,
-} from "../../state/atoms";
+import { Search, Filter, ChevronDown, ChevronUp, BookOpen } from "lucide-react";
+import { coursesState, filtersState } from "../../state/atoms";
 import { filteredCoursesSelector } from "../../state/selectors";
 import { AnimatePresence, motion } from "framer-motion";
 import CourseCard from "../ui/CourseCard";
@@ -246,7 +233,7 @@ const CoursesPage = () => {
             </h3>
             <p className="text-gray-600">
               Try adjusting your search criteria or filters
-            </p>  
+            </p>
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">

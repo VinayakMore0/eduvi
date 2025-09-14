@@ -1,9 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
-const fetch = require("node-fetch");
 const { JWT_USER_PASSWORD } = require("../../config");
-const { COOKIE_OPTIONS } = require("../../config");
 
 // Middleware to check if user is logged in
 const isAuthenticated = (req, res, next) => {

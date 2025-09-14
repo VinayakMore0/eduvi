@@ -1,5 +1,5 @@
-import { BookOpen, Globe, Heart, TrendingUp, Users } from "lucide-react";
 import React from "react";
+import { Globe, Heart, TrendingUp, Users } from "lucide-react";
 import { motion } from "framer-motion";
 
 const AboutPage = () => {

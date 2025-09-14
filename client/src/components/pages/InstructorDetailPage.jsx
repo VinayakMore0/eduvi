@@ -4,17 +4,13 @@ import { motion } from "framer-motion";
 import { toast } from "react-hot-toast";
 import {
   Star,
-  Users,
   BookOpen,
-  Award,
   ArrowLeft,
   Linkedin,
   Twitter,
   Github,
   Globe,
   Play,
-  Clock,
-  TrendingUp,
 } from "lucide-react";
 import ApiService from "../../services/apiService";
 
@@ -31,8 +27,8 @@ const InstructorDetailPage = () => {
   const loadInstructorData = async () => {
     try {
       const response = await ApiService.getInstructor(id);
-      setInstructor(response.data.instructor);
-      setCourses(response.data.instructor.courses || []);
+      setInstructor(response.instructor);
+      setCourses(response.instructor.courses || []);
     } catch (error) {
       console.error("Load instructor error:", error);
       toast.error("Failed to load instructor details");

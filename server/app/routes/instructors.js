@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const instructorModel = require("../models/Instructor");
+const InstructorApplication = require("../models/InstructorApplication.js");
 
 router.get("/", async (req, res) => {
   try {
@@ -8,6 +9,24 @@ router.get("/", async (req, res) => {
     res.json({ instructors });
   } catch (error) {
     console.error("Error fetching instructors:", error);
+    res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+});
+
+router.get("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const instructor = await instructorModel.findById(id).populate("courses"); // make sure Instructor schema has courses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }]
+
+    if (!instructor) {
+      return res.status(404).json({ message: "Instructor not found" });
+    }
+
+    res.json({ instructor });
+  } catch (error) {
+    console.error("Error fetching instructor:", error);
     res.status(500).json({
       message: "Internal server error",
     });
@@ -26,16 +45,17 @@ router.post("/apply", async (req, res) => {
         .json({ message: "Please fill in all required fields" });
     }
 
-    // Normally you’d save to DB. For now, return success with submitted data
-    const application = {
+    // Create and save application to DB
+    const application = new InstructorApplication({
       bio,
       experience,
       education,
       skills,
       motivation,
       sampleWork,
-      createdAt: new Date(),
-    };
+    });
+
+    await application.save();
 
     return res.status(201).json({
       message: "Application submitted successfully!",

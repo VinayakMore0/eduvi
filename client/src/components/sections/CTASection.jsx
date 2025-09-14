@@ -1,6 +1,4 @@
 import React from "react";
-import { useRecoilState } from "recoil";
-import { routerState } from "../../state/atoms";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 

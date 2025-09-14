@@ -1,4 +1,3 @@
-// src/components/pages/DashboardPage.jsx
 import React, { useState, useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import { Link, useNavigate } from "react-router-dom";
@@ -8,16 +7,10 @@ import {
   BookOpen,
   Clock,
   Award,
-  TrendingUp,
-  Play,
-  Star,
   Download,
   RefreshCw,
-  Eye,
-  CheckCircle,
   ChevronRight,
   Search,
-  Trophy,
   Zap,
 } from "lucide-react";
 import { userState } from "../../state/atoms";

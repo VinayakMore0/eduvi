@@ -1,4 +1,3 @@
-// src/components/pages/CreateCoursePage.jsx
 import React, { useState } from "react";
 import { useRecoilValue } from "recoil";
 import { useNavigate } from "react-router-dom";

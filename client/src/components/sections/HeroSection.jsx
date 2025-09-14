@@ -1,7 +1,5 @@
 import React from "react";
-import { useRecoilState } from "recoil";
 import { Play, BookOpen, Users, Star, ArrowRight } from "lucide-react";
-import { routerState } from "../../state/atoms";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -68,9 +66,13 @@ const HeroSection = () => {
           >
             <div className="bg-white rounded-2xl shadow-2xl p-8 relative z-10">
               <div className="aspect-video bg-gradient-to-br from-blue-100 to-purple-100 rounded-xl flex items-center justify-center mb-6">
-                <div className="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center">
+                <a
+                  className="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center"
+                  target="_blank"
+                  href="https://www.youtube.com/watch?v=gQojMIhELvM&list=PLoYCgNOIyGAB_8_iq1cL8MVeun7cB6eNc"
+                >
                   <Play className="text-white ml-1" size={32} />
-                </div>
+                </a>
               </div>
               <div className="space-y-4">
                 <h3 className="text-xl font-semibold">

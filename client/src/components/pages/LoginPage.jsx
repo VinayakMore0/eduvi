@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { Eye, EyeOff } from "lucide-react";
-import { authFormState, routerState, userState } from "../../state/atoms";
+import { userState } from "../../state/atoms";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";

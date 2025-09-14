@@ -12,7 +12,6 @@ import {
   BookOpen,
   Heart,
   ArrowLeft,
-  Download,
   Share2,
 } from "lucide-react";
 import { cartState, userState, wishlistState } from "../../state/atoms";
